@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Dashboard of Client and Developer users (only their own client data). Tiles: Id = Page name. -->
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="lk.technocom.pages.ClientDashboardPage">
+    <content>
+        <VBox spacing="14">
+            <padding><Insets top="20" right="26" bottom="26" left="26"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <VBox spacing="2">
+                    <Label text="Dashboard" styleClass="h1"/>
+                    <Label fx:id="lblWelcome" text="Welcome" styleClass="sub"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Notifications" styleClass="btn-outline" onAction="#onNotifications"/>
+            </HBox>
+            <HBox spacing="14">
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label fx:id="statProjects" text="0" styleClass="stat-value"/>
+                    <Label text="My Projects" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label fx:id="statProgress" text="0" styleClass="stat-value"/>
+                    <Label text="Average progress" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label fx:id="statDue" text="0" styleClass="stat-value"/>
+                    <Label text="Payments Due" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label fx:id="statMeet" text="0" styleClass="stat-value"/>
+                    <Label text="Upcoming meetings" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+            <Label text="Quick navigation" styleClass="section-title"/>
+            <FlowPane fx:id="tiles" hgap="14" vgap="14">
+                <VBox id="PROJECTS" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Projects" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="DPR" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="DPR" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="DRAWINGS" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Drawings" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="MEETINGS" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Meetings" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="PAYMENTS" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Payments" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="PAYSUM" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Payment Summary" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="HANDOVER" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Handover &amp; DLP" styleClass="tile-title"/>
+                </VBox>
+                <VBox id="REPORTS" styleClass="card,tile" prefWidth="190" onMouseClicked="#onTile">
+                    <Label text="Reports" styleClass="tile-title"/>
+                </VBox>
+            </FlowPane>
+            <VBox styleClass="card" spacing="10">
+                <Label text="My Projects" styleClass="section-title"/>
+                <VBox fx:id="projectsBox" spacing="12"/>
+            </VBox>
+            <HBox spacing="14">
+                <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label text="Upcoming payments" styleClass="section-title"/>
+                    <VBox fx:id="payBox" spacing="8"/>
+                </VBox>
+                <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label text="Upcoming meetings" styleClass="section-title"/>
+                    <VBox fx:id="meetBox" spacing="8"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </content>
+</ScrollPane>
