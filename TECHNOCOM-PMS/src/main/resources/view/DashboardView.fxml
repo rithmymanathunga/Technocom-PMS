@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Staff dashboard. Role chips: Id = role name. Tiles: Id = Page name. The 4 cards at the bottom
+     (progress chart, payments, meetings, approvals) are put into the empty holder boxes by DashboardController. -->
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll" stylesheets="@../css/app.css"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="lk.technocom.pages.DashboardController">
+    <content>
+        <VBox spacing="14">
+            <padding><Insets top="20" right="26" bottom="26" left="26"/></padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <VBox spacing="2">
+                    <Label fx:id="lblTitle" text="Dashboard" styleClass="h1"/>
+                    <Label fx:id="lblSub" text="One dashboard for every role - locked tiles are visible but not clickable" styleClass="sub"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnNotifications" text="Notifications" styleClass="btn-outline" onAction="#onNotifications"/>
+                <Button fx:id="btnNewProject" text="+ New Project" styleClass="btn-primary" onAction="#onNewProject"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label fx:id="lblLoggedAs" text="Logged in as" styleClass="section-title"/>
+                <HBox fx:id="roleChips" alignment="CENTER_LEFT" spacing="8">
+                    <Label id="Admin" text="Admin" styleClass="chip"/>
+                    <Label id="Project Manager" text="Project Manager" styleClass="chip"/>
+                    <Label id="Site Engineer" text="Site Engineer" styleClass="chip"/>
+                    <Label id="QS Engineer" text="QS Engineer" styleClass="chip"/>
+                    <Label id="Stock Keeper" text="Stock Keeper" styleClass="chip"/>
+                </HBox>
+            </HBox>
+
+            <HBox spacing="14">
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
+                    <Label fx:id="statActive" text="0" styleClass="stat-value"/>
+                    <Label fx:id="lblActive" text="Active Projects" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
+                    <Label fx:id="statPending" text="0" styleClass="stat-value"/>
+                    <Label fx:id="lblPending" text="Pending Approvals" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
+                    <Label fx:id="statMeetings" text="0" styleClass="stat-value"/>
+                    <Label fx:id="lblMeetings" text="Meetings This Week" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
+                    <Label fx:id="statPayments" text="0" styleClass="stat-value"/>
+                    <Label fx:id="lblPayments" text="Payments Due" styleClass="stat-label"/>
+                </VBox>
+                <VBox styleClass="card" spacing="2" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <padding><Insets top="14" right="18" bottom="14" left="18"/></padding>
+                    <Label fx:id="statLow" text="0" styleClass="stat-value"/>
+                    <Label fx:id="lblLow" text="Low Stock" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+
+            <Label fx:id="lblQuick" text="Quick navigation" styleClass="section-title"/>
+            <GridPane fx:id="tiles" hgap="14" vgap="14">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="20"/>
+                </columnConstraints>
+                <VBox id="ACCOUNT" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Account" styleClass="tile-title"/>
+                    <Label text="Profile, password, alerts" styleClass="muted"/>
+                </VBox>
+                <VBox id="USERS" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Users" styleClass="tile-title"/>
+                    <Label text="Accounts and roles" styleClass="muted"/>
+                </VBox>
+                <VBox id="CLIENTS" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Clients" styleClass="tile-title"/>
+                    <Label text="Client records" styleClass="muted"/>
+                </VBox>
+                <VBox id="PROJECTS" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Projects" styleClass="tile-title"/>
+                    <Label text="Site requirements, documents" styleClass="muted"/>
+                </VBox>
+                <VBox id="DPR" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="4" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="DPR" styleClass="tile-title"/>
+                    <Label text="Daily progress reports" styleClass="muted"/>
+                </VBox>
+                <VBox id="BOQ" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="BOQ" styleClass="tile-title"/>
+                    <Label text="Estimates and approval" styleClass="muted"/>
+                </VBox>
+                <VBox id="DRAWINGS" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Drawings" styleClass="tile-title"/>
+                    <Label text="Approval tracker" styleClass="muted"/>
+                </VBox>
+                <VBox id="SPECS" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Specs" styleClass="tile-title"/>
+                    <Label text="Specifications" styleClass="muted"/>
+                </VBox>
+                <VBox id="MEETINGS" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Meetings" styleClass="tile-title"/>
+                    <Label text="Schedule and minutes" styleClass="muted"/>
+                </VBox>
+                <VBox id="STOCK" styleClass="card" spacing="2" maxWidth="Infinity" GridPane.columnIndex="4" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Stock" styleClass="tile-title"/>
+                    <Label text="Items, in, issue" styleClass="muted"/>
+                </VBox>
+            </GridPane>
+
+            <HBox spacing="14">
+                <VBox fx:id="progressHolder" HBox.hgrow="ALWAYS"/>
+                <VBox fx:id="paymentsHolder" HBox.hgrow="ALWAYS"/>
+                <VBox fx:id="meetingsHolder" HBox.hgrow="ALWAYS"/>
+                <VBox fx:id="approvalsHolder" HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </content>
+</ScrollPane>

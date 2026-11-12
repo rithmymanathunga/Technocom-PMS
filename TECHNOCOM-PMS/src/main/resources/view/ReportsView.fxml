@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Reports and Admin. The report tiles (grid) are added by the program because they come from a list of reports.
+     Admin tiles: Id = BACKUP, EMAIL, EMAILLOG, AUDIT, COMPANY. -->
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="lk.technocom.pages.ReportsAdminPage$View">
+    <content>
+        <VBox spacing="14">
+            <padding><Insets top="20" right="26" bottom="26" left="26"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <VBox spacing="2">
+                    <Label text="Reports &amp; Admin" styleClass="h1"/>
+                    <Label text="Every report in one place - Preview and admin tools open as pop-ups" styleClass="sub"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Advanced Builder" styleClass="btn-outline" onAction="#onReportBuilder"/>
+                <Button text="PDF" styleClass="btn-outline" onAction="#onPdf"/>
+                <Button text="Excel" styleClass="btn-primary" onAction="#onExcel"/>
+            </HBox>
+            <HBox spacing="12">
+                <ComboBox fx:id="cbProject" styleClass="filter-box" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cbClient" styleClass="filter-box" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cbRange" styleClass="filter-box" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cbStatus" styleClass="filter-box" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <HBox fx:id="lower" spacing="14">
+                <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Reports Centre" styleClass="section-title"/>
+                    <Label text="Click a report to select it, double-click to preview. Then use PDF or Excel above." styleClass="muted" wrapText="true"/>
+                    <GridPane fx:id="reportGrid" hgap="12" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="33.3"/>
+                            <ColumnConstraints percentWidth="33.3"/>
+                            <ColumnConstraints percentWidth="33.3"/>
+                        </columnConstraints>
+                    </GridPane>
+                </VBox>
+                <VBox fx:id="adminBox" styleClass="card" spacing="8" prefWidth="360" minWidth="320">
+                    <Label text="Admin" styleClass="section-title"/>
+                    <VBox id="BACKUP" styleClass="card,tile" onMouseClicked="#onAdminTile">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <Label text="Backup &amp; Restore" styleClass="tile-title"/>
+                    </VBox>
+                    <VBox id="EMAIL" styleClass="card,tile" onMouseClicked="#onAdminTile">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <Label text="Email Settings" styleClass="tile-title"/>
+                    </VBox>
+                    <VBox id="EMAILLOG" styleClass="card,tile" onMouseClicked="#onAdminTile">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <Label text="Email Log" styleClass="tile-title"/>
+                    </VBox>
+                    <VBox id="AUDIT" styleClass="card,tile" onMouseClicked="#onAdminTile">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <Label text="Audit Log" styleClass="tile-title"/>
+                    </VBox>
+                    <VBox id="COMPANY" styleClass="card,tile" onMouseClicked="#onAdminTile">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <Label text="Company Settings" styleClass="tile-title"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </content>
+</ScrollPane>
