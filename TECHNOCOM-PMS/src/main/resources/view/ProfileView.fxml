@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- My profile pop-up (the window frame is DialogView.fxml) -->
+<VBox spacing="14" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="lk.technocom.pages.AccountPopups$Profile">
+    <padding><Insets top="18" right="22" bottom="20" left="22"/></padding>
+    <GridPane hgap="24" vgap="14">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50"/>
+            <ColumnConstraints percentWidth="50"/>
+        </columnConstraints>
+            <VBox spacing="2" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Name" styleClass="kv-key"/>
+                <Label fx:id="valName" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Role" styleClass="kv-key"/>
+                <Label fx:id="valRole" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label text="Username" styleClass="kv-key"/>
+                <Label fx:id="valUser" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="Email" styleClass="kv-key"/>
+                <Label fx:id="valEmail" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <Label text="Phone" styleClass="kv-key"/>
+                <Label fx:id="valPhone" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label text="NIC" styleClass="kv-key"/>
+                <Label fx:id="valNic" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Label text="Address" styleClass="kv-key"/>
+                <Label fx:id="valAddress" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Label text="Language" styleClass="kv-key"/>
+                <Label fx:id="valLang" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <Label text="Last login" styleClass="kv-key"/>
+                <Label fx:id="valLast" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+            <VBox spacing="2" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <Label text="Member since" styleClass="kv-key"/>
+                <Label fx:id="valSince" text="-" styleClass="kv-value" wrapText="true"/>
+            </VBox>
+    </GridPane>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Edit contact details" styleClass="btn-outline" onAction="#onEdit"/>
+        <Button text="Close" styleClass="btn-primary" onAction="#onClose"/>
+    </HBox>
+</VBox>
