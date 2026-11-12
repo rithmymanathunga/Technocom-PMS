@@ -1,0 +1,54 @@
+package lk.technocom.workflow;
+
+import lk.technocom.service.FileService;
+import lk.technocom.util.Audit;
+import lk.technocom.util.Db;
+import lk.technocom.util.Session;
+import lk.technocom.util.TenantScope;
+import lk.technocom.ui.ActionPermission;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.security.*;
+import java.time.LocalDateTime;
+import java.util.*;
+
+/** Versioned document storage, safe local preview, access logging and expiring single-purpose shares. */
+public final class DocumentControlService {
+    private static final long MAX_BYTES=50L*1024*1024;
+    private static final Set<String> EXT=Set.of("pdf","doc","docx","xls","xlsx","csv","jpg","jpeg","png","txt");
+    private DocumentControlService(){}
+    private static void staff(){ActionPermission.require(ActionPermission.Action.MANAGE_DOCUMENTS);if(Session.getUserId()<=0||Session.isClient())throw new SecurityException("Internal staff access required.");}
+    private static Map<String,Object> doc(long id){ActionPermission.require(ActionPermission.Action.VIEW_DOCUMENTS);TenantScope.requireDocument(id);Map<String,Object>d=Db.row("SELECT d.* FROM document_register d JOIN projects p ON p.project_id=d.project_id WHERE d.document_id=? AND p.organization_id=? AND d.archived_at IS NULL",id,Session.getOrganizationId());if(d==null)throw new IllegalArgumentException("Document not found.");if(Session.isClient()){int client=Session.getClientId();if(client<=0||Db.num("SELECT COUNT(*) FROM document_register d JOIN projects p ON p.project_id=d.project_id WHERE d.document_id=? AND p.client_id=? AND d.visibility='CLIENT_APPROVED'",id,client)!=1)throw new SecurityException("Document is not available to this client.");}else staff();return d;}
+    public static List<Map<String,Object>> versions(long documentId){doc(documentId);return Db.rows("SELECT v.*,u.full_name AS uploader FROM document_versions v JOIN users u ON u.user_id=v.uploaded_by WHERE v.document_id=? ORDER BY v.version_no DESC",documentId);}
+    public static long addVersion(long documentId,File file,String note){staff();Map<String,Object>d=doc(documentId);validate(file);String relative=store(file,"documents/"+documentId);String checksum=sha256(FileService.root().resolve(relative));final long[] id={0};Db.tx(c->{Map<String,Object>r=Db.row(c,"SELECT COALESCE(MAX(version_no),0) AS current_version FROM document_versions WHERE document_id=?",documentId);int current=((Number)r.get("current_version")).intValue();if(current==0){String oldName=String.valueOf(d.get("original_file_name"));String oldPath=String.valueOf(d.get("storage_path"));Path oldCandidate=FileService.root().resolve(oldPath).normalize();String oldHash=Files.exists(oldCandidate)?sha256(resolve(oldPath)):"0".repeat(64);Db.insert(c,"INSERT INTO document_versions(document_id,version_no,original_file_name,storage_path,checksum_sha256,change_note,uploaded_by) VALUES(?,1,?,?,?,'Imported existing current version',?)",documentId,oldName,oldPath,oldHash,d.get("uploaded_by"));current=1;}int next=current+1;Db.exec(c,"UPDATE document_register SET is_current=0 WHERE document_id=?",documentId);id[0]=Db.insert(c,"INSERT INTO document_versions(document_id,version_no,original_file_name,storage_path,checksum_sha256,change_note,uploaded_by) VALUES(?,?,?,?,?,?,?)",documentId,next,file.getName(),relative,checksum,blank(note),Session.getUserId());Db.exec(c,"UPDATE document_register SET original_file_name=?,storage_path=?,version_no=?,uploaded_by=?,uploaded_at=NOW(),is_current=1 WHERE document_id=?",file.getName(),relative,String.valueOf(next),Session.getUserId(),documentId);});log(documentId,"VERSION_UPLOAD","Added version file "+file.getName());Audit.log("VERSION_UPLOAD","DOCUMENT","Document "+documentId+" version created");return id[0];}
+    public static Path preview(long documentId){Map<String,Object>d=doc(documentId);String name=String.valueOf(d.get("original_file_name"));String ext=extension(name);if(!Set.of("pdf","jpg","jpeg","png","txt").contains(ext))throw new IllegalArgumentException("Preview is available for PDF, image and text documents. Download Office files to open them.");Path path=resolve(String.valueOf(d.get("storage_path")));if(!Files.isRegularFile(path))throw new IllegalStateException("Stored document file is missing.");log(documentId,"PREVIEW",name);return path;}
+    public static Path download(long documentId){Map<String,Object>d=doc(documentId);Path path=resolve(String.valueOf(d.get("storage_path")));if(!Files.isRegularFile(path))throw new IllegalStateException("Stored document file is missing.");log(documentId,"DOWNLOAD",String.valueOf(d.get("original_file_name")));return path;}
+    public static List<Map<String,Object>> accessLog(long documentId){doc(documentId);return Db.rows("SELECT l.*,u.full_name FROM document_access_logs l LEFT JOIN users u ON u.user_id=l.user_id WHERE l.document_id=? ORDER BY l.accessed_at DESC LIMIT 500",documentId);}
+    /** Returns the one-time plaintext share token to the creator; only its SHA-256 hash is persisted. */
+    public static String createShare(long documentId,LocalDateTime expiresAt,int maxUses){staff();doc(documentId);if(expiresAt==null||!expiresAt.isAfter(LocalDateTime.now())||expiresAt.isAfter(LocalDateTime.now().plusDays(30)))throw new IllegalArgumentException("Share expiry must be within the next 30 days.");if(maxUses<1||maxUses>100)throw new IllegalArgumentException("Share use limit must be 1 to 100.");String token=randomToken();Db.insert("INSERT INTO document_secure_shares(document_id,token_hash,expires_at,max_uses,created_by) VALUES(?,?,?,?,?)",documentId,sha256(token),expiresAt,maxUses,Session.getUserId());log(documentId,"SHARE_CREATE","Expires "+expiresAt+", uses "+maxUses);Audit.log("SHARE_CREATE","DOCUMENT","Secure share created for document "+documentId);return token;}
+    /** Redeems an unexpired, unrevoked share once and returns a path only after atomic use-count update. */
+    public static Path redeemShare(String token){if(blank(token)==null||token.length()>200)throw new SecurityException("Invalid share token.");Map<String,Object>s=Db.row("SELECT share_id,document_id,max_uses,use_count FROM document_secure_shares WHERE token_hash=? AND revoked_at IS NULL AND expires_at>NOW()",sha256(token));if(s==null)throw new SecurityException("Share link is invalid, expired or revoked.");long share=((Number)s.get("share_id")).longValue(),docId=((Number)s.get("document_id")).longValue();final boolean[] ok={false};Db.tx(c->{Map<String,Object>locked=Db.row(c,"SELECT max_uses,use_count FROM document_secure_shares WHERE share_id=? AND revoked_at IS NULL AND expires_at>NOW() FOR UPDATE",share);Map<String,Object>activeDoc=Db.row(c,"SELECT document_id FROM document_register WHERE document_id=? AND archived_at IS NULL FOR UPDATE",docId);if(locked!=null&&activeDoc!=null&&((Number)locked.get("use_count")).intValue()<((Number)locked.get("max_uses")).intValue())ok[0]=Db.exec(c,"UPDATE document_secure_shares SET use_count=use_count+1 WHERE share_id=? AND revoked_at IS NULL",share)==1;});if(!ok[0])throw new SecurityException("Share link has reached its use limit.");Map<String,Object>d=Db.row("SELECT storage_path FROM document_register WHERE document_id=? AND archived_at IS NULL",docId);if(d==null)throw new SecurityException("Shared document no longer exists.");Path p=resolve(String.valueOf(d.get("storage_path")));if(!Files.isRegularFile(p))throw new IllegalStateException("Stored document file is missing.");log(docId,"SHARE_ACCESS","Secure link redeemed");return p;}
+    public static List<Map<String,Object>> shares(long documentId){staff();doc(documentId);return Db.rows("SELECT share_id,expires_at,max_uses,use_count,created_at,revoked_at FROM document_secure_shares WHERE document_id=? ORDER BY created_at DESC",documentId);}
+    public static void revokeShare(long shareId){staff();int n=Db.exec("UPDATE document_secure_shares sh JOIN document_register d ON d.document_id=sh.document_id JOIN projects p ON p.project_id=d.project_id SET sh.revoked_at=NOW() WHERE sh.share_id=? AND sh.revoked_at IS NULL AND p.organization_id=?",shareId,TenantScope.requireOrganization());if(n!=1)throw new IllegalArgumentException("Active share not found.");Audit.log("SHARE_REVOKE","DOCUMENT","Share "+shareId+" revoked");}
+    private static void validate(File f){if(f==null||!f.isFile()||f.length()<=0||f.length()>MAX_BYTES)throw new IllegalArgumentException("Choose a non-empty document up to 50 MB.");if(!EXT.contains(extension(f.getName())))throw new IllegalArgumentException("Unsupported document type.");}
+    private static String store(File f,String folder){try{return FileService.store(f,folder);}catch(IOException e){throw new IllegalStateException("Could not store document.",e);}}
+    private static Path resolve(String relative){
+        Path root=FileService.root().resolve("uploads").normalize();
+        Path p=FileService.root().resolve(relative).normalize();
+        if(!p.startsWith(root)||Files.isSymbolicLink(p))throw new SecurityException("Invalid document storage path.");
+        try {
+            Path realRoot=root.toRealPath();
+            Path real=p.toRealPath();
+            if(!real.startsWith(realRoot)||!Files.isRegularFile(real))throw new SecurityException("Document path is outside the managed storage area.");
+            return real;
+        } catch(IOException e) { throw new IllegalStateException("Stored document file is unavailable.",e); }
+    }
+    private static String extension(String n){int i=n.lastIndexOf('.');return i<0?"":n.substring(i+1).toLowerCase(Locale.ROOT);}
+    private static String sha256(Path p){try(InputStreamWithDigest in=new InputStreamWithDigest(p)){return in.hash();}catch(Exception e){throw new IllegalStateException("Could not checksum document.",e);}}
+    private static String sha256(String s){try{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(s.getBytes(java.nio.charset.StandardCharsets.UTF_8)));}catch(NoSuchAlgorithmException e){throw new IllegalStateException(e);}}
+    private static String randomToken(){byte[] b=new byte[32];new SecureRandom().nextBytes(b);return Base64.getUrlEncoder().withoutPadding().encodeToString(b);}
+    private static void log(long id,String action,String detail){Db.insert("INSERT INTO document_access_logs(document_id,user_id,access_action,details) VALUES(?,?,?,?)",id,Session.getUserId()==0?null:Session.getUserId(),action,detail);}
+    private static String blank(String s){return s==null||s.isBlank()?null:s.trim();}
+    private static final class InputStreamWithDigest implements AutoCloseable{private final String hash;InputStreamWithDigest(Path p)throws Exception{MessageDigest d=MessageDigest.getInstance("SHA-256");try(var in=Files.newInputStream(p)){byte[]b=new byte[8192];int n;while((n=in.read(b))>0)d.update(b,0,n);}hash=HexFormat.of().formatHex(d.digest());}String hash(){return hash;}public void close(){}}
+}
