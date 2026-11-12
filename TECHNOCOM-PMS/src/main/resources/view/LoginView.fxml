@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<StackPane fx:id="root" styleClass="login-root" stylesheets="@../css/style.css"
+ xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+ fx:controller="lk.technocom.controller.LoginController">
+ <Group>
+  <Pane fx:id="canvas" prefWidth="1380" prefHeight="752" minWidth="1380" minHeight="752" maxWidth="1380" maxHeight="752" styleClass="login-canvas">
+   <Rectangle width="1380" height="752" styleClass="login-background"/>
+   <Pane fx:id="photoPane" layoutX="0" layoutY="0" prefWidth="696" prefHeight="752">
+    <ImageView fitWidth="696" fitHeight="752" preserveRatio="false"><image><Image url="@../images/login_building.jpg"/></image></ImageView>
+    <Rectangle width="696" height="752" styleClass="login-photo-shade" mouseTransparent="true"/>
+   </Pane>
+   <Rectangle x="830" y="136" width="424" height="496" arcWidth="22" arcHeight="22" styleClass="login-card"/>
+   <Label text="TECHNOCOM" layoutX="866" layoutY="185" styleClass="login-brand"/>
+   <Label text="ENGINEERING SERVICES" layoutX="866" layoutY="210" styleClass="login-brand-small"/>
+   <ComboBox fx:id="cbLanguage" layoutX="1118" layoutY="158" prefWidth="116" prefHeight="36" styleClass="login-lang"/>
+   <TextFlow layoutX="866" layoutY="280">
+    <Text fx:id="txtWelcome1" text="MASTERWORKS " styleClass="login-welcome-gold"/>
+    <Text fx:id="txtWelcome2" text="LOGIN" styleClass="login-welcome-white"/>
+   </TextFlow>
+   <Label fx:id="lblSubtitle" text="Sign in to continue to your account" layoutX="866" layoutY="306" styleClass="login-subtitle"/>
+   <TextField fx:id="tfUsername" layoutX="866" layoutY="336" prefWidth="354" prefHeight="46" styleClass="login-field"/>
+   <PasswordField fx:id="pfPassword" layoutX="866" layoutY="392" prefWidth="354" prefHeight="46" styleClass="login-field"/>
+   <TextField fx:id="tfPasswordVisible" layoutX="866" layoutY="392" prefWidth="354" prefHeight="46" styleClass="login-field" visible="false" managed="false"/>
+   <Button fx:id="btnEye" layoutX="1174" layoutY="396" prefWidth="40" prefHeight="38" text="◉" styleClass="login-eye" onAction="#onToggleEye"/>
+   <Label fx:id="lblError" layoutX="866" layoutY="440" styleClass="login-error"/>
+   <CheckBox fx:id="cbRemember" text="Remember me" selected="true" layoutX="866" layoutY="466" styleClass="login-check"/>
+   <Button fx:id="btnForgot" text="Forgot password?" layoutX="1082" layoutY="462" prefWidth="138" alignment="CENTER_RIGHT" styleClass="login-link" onAction="#onForgot"/>
+   <Button fx:id="btnLogin" text="Login  →" layoutX="866" layoutY="508" prefWidth="354" prefHeight="48" styleClass="login-btn" onAction="#onLogin"/>
+   <HBox layoutX="866" layoutY="572" prefWidth="354" alignment="CENTER" spacing="6">
+    <Label fx:id="lblNoAccount" text="Don't have an account?" styleClass="login-small"/>
+    <Button fx:id="btnContact" text="Contact Administrator" styleClass="login-link-small" onAction="#onContact"/>
+   </HBox>
+   <Button fx:id="btnPortalInvite" text="Accept Client Invitation" layoutX="966" layoutY="602" styleClass="login-link-small" onAction="#onPortalInvite"/>
+  </Pane>
+ </Group>
+</StackPane>

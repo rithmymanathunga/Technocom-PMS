@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" styleClass="contact-root" stylesheets="@../css/style.css"
+           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="lk.technocom.controller.ContactAdminController">
+    <VBox styleClass="contact-card" spacing="8" prefWidth="580" maxWidth="580" maxHeight="-Infinity">
+
+        <Label fx:id="lblTitle" text="Contact Administrator" styleClass="contact-title"/>
+        <Label fx:id="lblSub" text="Ask the system administrator to create or reset your account" wrapText="true" styleClass="contact-sub"/>
+
+        <!-- administrator details: one line each -->
+        <VBox spacing="3" styleClass="contact-admin-box">
+            <Label fx:id="lblAdminName" text="System Administrator" styleClass="contact-admin-name"/>
+            <Label fx:id="lblAdminEmail" text="admin@technocom.lk" styleClass="contact-admin-info"/>
+            <Label fx:id="lblAdminPhone" text="011 234 5678" styleClass="contact-admin-info"/>
+        </VBox>
+
+        <Label fx:id="lblName" text="Full Name *" styleClass="contact-label"/>
+        <TextField fx:id="tfName" styleClass="contact-field"/>
+
+        <Label fx:id="lblEmail" text="Email *" styleClass="contact-label"/>
+        <TextField fx:id="tfEmail" styleClass="contact-field"/>
+
+        <Label fx:id="lblMessage" text="Message *" styleClass="contact-label"/>
+        <TextArea fx:id="taMessage" prefRowCount="5" wrapText="true" styleClass="contact-field"/>
+
+        <Label fx:id="lblStatus" wrapText="true" styleClass="contact-status"/>
+
+        <HBox spacing="14" alignment="CENTER_RIGHT">
+            <Button fx:id="btnClose" text="Close" styleClass="contact-btn-outline" onAction="#onClose"/>
+            <Button fx:id="btnSend" text="Send Request" styleClass="contact-btn-gold" onAction="#onSend"/>
+        </HBox>
+    </VBox>
+</StackPane>

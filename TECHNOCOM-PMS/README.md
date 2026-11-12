@@ -1,46 +1,46 @@
-Day 01 – Project Foundation & Database Connectivity
+Day 02 – Login & Authentication
 
 Project: Technocom PMS
 Developer: Rithmi Manathunga
-Date: November 01, 2026
+Date: November 02, 2026
 
 Overview
 
-This milestone focuses on establishing the initial application foundation and implementing the basic database connectivity infrastructure for the Technocom Project Management System.
-
-Completed Tasks
-
-* Established the main Java application entry points.
-* Created the application launcher.
-* Implemented database connection functionality.
-* Added database exception handling.
-* Introduced reusable formatting utilities.
+This milestone focuses on implementing the login and authentication module of the Technocom Project Management System.
 
 Files Implemented
 
-File	Description
-Launcher.java	Application launcher
-Main.java	Main application entry point
-Db.java	Database operations
-DBConnection.java	Database connectivity
-DbException.java	Database exception handling
-Fmt.java	Formatting utilities
+Controllers
 
-Total: 6 Java files
+* LoginController.java
+* ResetController.java
+* ResetFlow.java
+* ContactAdminController.java
 
-Technologies Used
+Services
 
-* Java 25
-* JavaFX 25
-* MySQL
-* Maven
-* IntelliJ IDEA
+* AuthService.java
+* PasswordService.java
+
+Views
+
+* LoginView.fxml
+* ResetView.fxml
+* ContactAdminView.fxml
+
+Total: 9 files
+
+Main Features
+
+* User login interface
+* Authentication handling
+* Password reset workflow
+* Contact administrator interface
+* Password management services
 
 Milestone Status
 
-Day 01 – Completed
-
-This milestone establishes the initial technical foundation for further development of Technocom PMS.
+Day 02 – Login & Authentication
 
 ⸻
 
