@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<StackPane fx:id="root" styleClass="login-root" stylesheets="@../css/style.css"
+ xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+ fx:controller="lk.technocom.controller.WelcomeController">
+ <Group>
+  <Pane fx:id="canvas" prefWidth="1408" prefHeight="768" minWidth="1408" minHeight="768" maxWidth="1408" maxHeight="768" styleClass="welcome-canvas">
+   <Rectangle width="1408" height="768" styleClass="welcome-background"/>
+   <Pane fx:id="photoPane" layoutX="855" layoutY="34" prefWidth="518" prefHeight="645">
+    <ImageView fitWidth="518" fitHeight="645" preserveRatio="false">
+     <image><Image url="@../images/welcome_building.jpg"/></image>
+    </ImageView>
+    <Rectangle width="518" height="645" styleClass="welcome-photo-shade" mouseTransparent="true"/>
+   </Pane>
+   <Line startX="820" startY="32" endX="820" endY="680" styleClass="login-gold-faint"/>
+   <Line startX="0" startY="680" endX="1373" endY="680" styleClass="login-gold-faint"/>
+   <Line startX="800" startY="40" endX="800" endY="680" styleClass="login-gold-faint"/>
+   <VBox layoutX="100" layoutY="58" spacing="0">
+    <Label fx:id="lblTo" text="TECHNOCOM" styleClass="welcome-brand"/>
+    <Label text="ENGINEERING SERVICES" styleClass="welcome-brand"/>
+   </VBox>
+   <VBox layoutX="100" layoutY="190" spacing="0">
+    <Label fx:id="lblTitle" text="ARCHITECTURAL MASTERY.&#10;UNCOMPROMISED&#10;PRECISION." styleClass="welcome-headline"/>
+    <Line startX="0" startY="0" endX="770" endY="0" styleClass="welcome-underline"/>
+   </VBox>
+   <HBox xmlns="http://javafx.com/javafx" layoutX="100" layoutY="438" spacing="18">
+    <children>
+     <VBox styleClass="welcome-service-card" prefWidth="198" prefHeight="160" alignment="CENTER" spacing="14">
+      <Label text="⚙" styleClass="welcome-service-icon"/><Label fx:id="lblS1" text="MEP Consulting" styleClass="welcome-service"/>
+     </VBox>
+     <VBox styleClass="welcome-service-card" prefWidth="198" prefHeight="160" alignment="CENTER" spacing="14">
+      <Label text="⌖" styleClass="welcome-service-icon"/><Label fx:id="lblS2" text="MEP Design" styleClass="welcome-service"/>
+     </VBox>
+     <VBox styleClass="welcome-service-card" prefWidth="198" prefHeight="160" alignment="CENTER" spacing="14">
+      <Label text="♧" styleClass="welcome-service-icon"/><Label fx:id="lblS3" text="Construction &amp; Installation" styleClass="welcome-service"/>
+     </VBox>
+    </children>
+   </HBox>
+   <Button fx:id="btnStart" text="GET STARTED  →" layoutX="289" layoutY="648" prefWidth="255" prefHeight="62" styleClass="welcome-start" onAction="#onStart"/>
+   <Label fx:id="lblSub" text="" layoutX="100" layoutY="730" styleClass="welcome-sub"/>
+  </Pane>
+ </Group>
+</StackPane>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Main window: sidebar + top bar + the page area (fx:id="content").
+     Every sidebar button has Id = the Page name (DASHBOARD, USERS ...). Keep those Ids. -->
+<BorderPane fx:id="root" styleClass="shell" stylesheets="@../css/app.css"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="lk.technocom.ui.AppShell">
+    <left>
+        <VBox styleClass="sidebar">
+            <ScrollPane styleClass="sidebar-scroll" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="navBox" spacing="2">
+                        <padding>
+                            <Insets top="18" right="12" bottom="18" left="12"/>
+                        </padding>
+                        <Label text="TECHNOCOM" styleClass="brand">
+                            <padding>
+                                <Insets bottom="8" left="14"/>
+                            </padding>
+                        </Label>
+                            <Label text="MAIN" styleClass="nav-group"/>
+                            <Button id="DASHBOARD" text="Dashboard" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="ACCOUNT" text="Account" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Label text="MASTER DATA" styleClass="nav-group"/>
+                            <Button id="USERS" text="Users" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="CLIENTS" text="Clients" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Label text="PROJECTS" styleClass="nav-group"/>
+                            <Button id="PROJECTS" text="Projects" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="PLANNING" text="Project Planning" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="DPR" text="DPR" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="BOQ" text="BOQ" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="DRAWINGS" text="Drawings" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="SPECS" text="Specs" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="MEETINGS" text="Meetings" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Label text="STORES &amp; FINANCE" styleClass="nav-group"/>
+                            <Button id="STOCK" text="Stock" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="PAYMENTS" text="Payments" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="PAYSUM" text="Payment Summary" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Button id="HANDOVER" text="Handover &amp; DLP" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Label text="OPERATIONS &amp; CONTROL" styleClass="nav-group"/>
+                            <Button id="ENTERPRISE" text="Enterprise Workflows" styleClass="nav-btn" maxWidth="Infinity"/>
+                            <Label text="INSIGHTS" styleClass="nav-group"/>
+                            <Button id="REPORTS" text="Reports &amp; Admin" styleClass="nav-btn" maxWidth="Infinity"/>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </left>
+    <center>
+        <VBox>
+            <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+                <TextField fx:id="globalSearch" promptText="Search projects, drawings, payments..." styleClass="global-search"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="langBox" styleClass="lang-box"/>
+                <Button fx:id="alertsBtn" text="0 alerts" styleClass="top-link"/>
+                <Label fx:id="roleLabel" text="· Admin" styleClass="muted"/>
+                <MenuButton fx:id="userMenu" text="User" styleClass="user-menu">
+                    <items>
+                        <MenuItem fx:id="miProfile" text="My profile" onAction="#onProfile"/>
+                        <MenuItem fx:id="miPassword" text="Change password" onAction="#onPassword"/>
+                        <MenuItem fx:id="miHelp" text="Help &amp; About" onAction="#onHelp"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem fx:id="miLogout" text="Logout" onAction="#onLogout"/>
+                    </items>
+                </MenuButton>
+            </HBox>
+            <StackPane fx:id="content" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+</BorderPane>
